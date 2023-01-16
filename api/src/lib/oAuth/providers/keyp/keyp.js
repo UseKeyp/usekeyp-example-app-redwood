@@ -7,7 +7,6 @@ import { encodeBody, getExpiration } from 'src/lib/oAuth/helpers'
 
 export const KEYP = 'KEYP'
 
-// TODO: Update with final production domain
 const KEYP_API_DOMAIN = 'http://localhost/oauth'
 
 export const KEYP_OAUTH_URL_AUTHORIZE = `${KEYP_API_DOMAIN}/auth`
@@ -18,7 +17,7 @@ const KEYP_REDIRECT_URI = process.env.APP_DOMAIN + '/redirect/keyp'
 
 const responseType = 'code'
 const params = {
-  client_id: 'a08dd22e-e05c-4314-ae7c-cda1af389a34',
+  client_id: process.env.KEYP_CLIENT_ID,
   scope: 'openid profile email',
   redirect_uri: KEYP_REDIRECT_URI,
 }
@@ -27,7 +26,6 @@ export const onSubmitCode = async (code, { codeVerifier }) => {
   try {
     const body = {
       grant_type: 'authorization_code',
-      // client_secret: process.env.KEYP_CLIENT_SECRET,
       client_id: process.env.KEYP_CLIENT_ID,
       redirect_uri: KEYP_REDIRECT_URI,
       code_verifier: codeVerifier,
