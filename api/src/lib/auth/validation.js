@@ -1,10 +1,8 @@
 import { AuthenticationError } from '@redwoodjs/graphql-server'
 
-import { DISCORD } from 'src/lib/oAuth/providers/discord'
-import { NODE_OIDC } from 'src/lib/oAuth/providers/node-oidc'
-import { OAUTH2_SERVER_REDWOOD } from 'src/lib/oAuth/providers/oauth2-server-redwood'
+import { KEYP } from 'src/lib/oAuth/providers/keyp'
 
-const APPROVED_LOGIN_PROVIDERS = [DISCORD, NODE_OIDC, OAUTH2_SERVER_REDWOOD]
+const APPROVED_LOGIN_PROVIDERS = [KEYP]
 
 export const validateLoginRequest = ({ type }) => {
   if (!APPROVED_LOGIN_PROVIDERS.includes(type)) {

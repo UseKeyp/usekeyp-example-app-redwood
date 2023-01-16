@@ -21,7 +21,7 @@ const LoginPortal = () => {
     let parsedType = type
     let login_provider = ''
     if (type.includes('KEYP')) {
-      parsedType = 'OAUTH2_SERVER_REDWOOD'
+      parsedType = 'KEYP'
       login_provider = `&login_provider=${type.split('KEYP_')[1]}`
     }
     const response = await signUp({ type: parsedType })
@@ -75,22 +75,9 @@ const LoginPortal = () => {
         </div>
 
         <div className="login-portal-container--button-wrapper ">
-          {getButton('NODE_OIDC', 'oidc-provider')}
-          <br />
-          {getButton('OAUTH2_SERVER_REDWOOD', 'oauth2-server-redwood')}
-          <br />
-          {getButton('DISCORD', 'Discord')}
-          <br />
-          {process.env.SHOW_KEYP_PROVIDERS && (
-            <>
-              <h4 className="color-grey-light text-center text-base font-bold">
-                Keyp Providers
-              </h4>
-              {getButton('KEYP_DISCORD', 'Discord')}
-              {getButton('KEYP_NODE_OIDC', 'oidc-provider')}
-              {getButton('KEYP_GOOGLE', 'Google')}
-            </>
-          )}
+          {getButton('KEYP_DISCORD', 'Discord')} <br />
+          {getButton('KEYP_NODE_OIDC', 'oidc-provider')} <br />
+          {getButton('KEYP_GOOGLE', 'Google')} <br />
           {errorText && <div className="rw-cell-error mt-2">{errorText}</div>}
         </div>
         <div className="w-full text-center"></div>
