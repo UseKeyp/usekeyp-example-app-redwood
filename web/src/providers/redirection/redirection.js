@@ -7,11 +7,7 @@ import { useOAuth } from 'src/providers/oAuth'
 const LOCAL_REDIRECT_TO_KEY = 'redirect_to'
 
 // If one of these types, treat the incoming action as a login
-export const APPROVED_LOGIN_PROVIDERS = [
-  'DISCORD',
-  'NODE_OIDC',
-  'OAUTH2_SERVER_REDWOOD',
-]
+export const APPROVED_LOGIN_PROVIDERS = ['KEYP']
 
 const saveRedirectTo = (redirect) =>
   redirect &&
