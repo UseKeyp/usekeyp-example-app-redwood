@@ -1,3 +1,6 @@
+-- CreateEnum
+CREATE TYPE "OAuthConnectionType" AS ENUM ('TWITCH', 'COINBASE', 'DISCORD', 'CHESS');
+
 -- CreateTable
 CREATE TABLE "User" (
     "id" TEXT NOT NULL,
@@ -10,12 +13,11 @@ CREATE TABLE "User" (
     "mfa_enabled" BOOLEAN,
     "imageSrc" TEXT,
     "country" TEXT,
-    "mintCredits" INTEGER NOT NULL DEFAULT 3,
     "banned" BOOLEAN NOT NULL DEFAULT false,
     "blocked" BOOLEAN,
+    "betaAccess" BOOLEAN NOT NULL DEFAULT false,
     "refreshToken" TEXT,
     "accessToken" TEXT,
-    "betaAccess" BOOLEAN NOT NULL DEFAULT false,
 
     CONSTRAINT "User_pkey" PRIMARY KEY ("id")
 );
@@ -31,14 +33,26 @@ CREATE TABLE "OAuth" (
     CONSTRAINT "OAuth_pkey" PRIMARY KEY ("state")
 );
 
--- CreateIndex
-CREATE UNIQUE INDEX "User_username_key" ON "User"("username");
+-- CreateTable
+CREATE TABLE "OAuthConnection" (
+    "id" TEXT NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+    "userId" TEXT NOT NULL,
+    "type" "OAuthConnectionType" NOT NULL,
+    "revoked" BOOLEAN NOT NULL DEFAULT false,
+    "refreshToken" TEXT,
+    "accessToken" TEXT NOT NULL,
+    "expiration" TIMESTAMP(3),
+
+    CONSTRAINT "OAuthConnection_pkey" PRIMARY KEY ("id")
+);
 
 -- CreateIndex
 CREATE UNIQUE INDEX "User_address_key" ON "User"("address");
 
--- CreateIndex
-CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
-
 -- AddForeignKey
 ALTER TABLE "OAuth" ADD CONSTRAINT "OAuth_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "OAuthConnection" ADD CONSTRAINT "OAuthConnection_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

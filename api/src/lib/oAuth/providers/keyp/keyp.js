@@ -7,18 +7,20 @@ import { encodeBody, getExpiration } from 'src/lib/oAuth/helpers'
 
 export const KEYP = 'KEYP'
 
-const KEYP_API_DOMAIN = 'http://localhost/oauth'
+let KEYP_OAUTH_DOMAIN = 'https://app.usekeyp.com/oauth'
 
-export const KEYP_OAUTH_URL_AUTHORIZE = `${KEYP_API_DOMAIN}/auth`
+if (process.env.LOCAL_KEYP_SERVER) KEYP_OAUTH_DOMAIN = 'http://localhost/oauth' // Don't worry about this, its only needed by the Keyp team
 
-const KEYP_OAUTH_URL_TOKEN = `${KEYP_API_DOMAIN}/token`
+export const KEYP_OAUTH_URL_AUTHORIZE = `${KEYP_OAUTH_DOMAIN}/auth`
+
+const KEYP_OAUTH_URL_TOKEN = `${KEYP_OAUTH_DOMAIN}/token`
 
 const KEYP_REDIRECT_URI = process.env.APP_DOMAIN + '/redirect/keyp'
 
 const responseType = 'code'
 const params = {
   client_id: process.env.KEYP_CLIENT_ID,
-  scope: 'openid profile email',
+  scope: 'openid email',
   redirect_uri: KEYP_REDIRECT_URI,
 }
 
@@ -77,7 +79,7 @@ export const onSubmitCode = async (code, { codeVerifier }) => {
 
 export const onConnected = async ({ accessToken, decoded }) => {
   try {
-    const userDetails = await fetch(`${KEYP_API_DOMAIN}/me`, {
+    const userDetails = await fetch(`${KEYP_OAUTH_DOMAIN}/me`, {
       headers: { Authorization: `Bearer ${accessToken}` },
     }).then((res) => {
       if (res.status != 200)
@@ -96,13 +98,12 @@ export const onConnected = async ({ accessToken, decoded }) => {
       create: {
         id: userDetails.sub,
         email: userDetails.email,
+        username: userDetails.username,
+        address: userDetails.address,
         accessToken,
       },
       where: { id: userDetails.sub },
     })
-    // NOTE you may need to modify return value here:
-    // for authentication - return the user object
-    // for authorization - return { status: 'SUCCESS' }
     return user
   } catch (e) {
     logger.error(e)

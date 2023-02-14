@@ -14,10 +14,10 @@ generator client {
 
 model User {
   id          String   @id
-  username    String?  @unique // platform username
+  username    String? // platform username
   address     String?  @unique // Torus wallet address
   locale      String?
-  email       String?  @unique // Email address
+  email       String? // Email address
   // --------------- STATE --------------
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
